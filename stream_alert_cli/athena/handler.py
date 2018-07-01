@@ -16,7 +16,7 @@ limitations under the License.
 from stream_alert.athena_partition_refresh.main import AthenaRefresher
 from stream_alert.rule_processor.firehose import StreamAlertFirehose
 from stream_alert.shared.alert import Alert
-from stream_alert.shared.athena import AthenaClient
+from stream_alert.shared.athena import AthenaClient, AthenaQueryExecutionError
 from stream_alert_cli.athena import helpers
 from stream_alert_cli.helpers import continue_prompt, record_to_schema
 from stream_alert_cli.logger import LOGGER_CLI

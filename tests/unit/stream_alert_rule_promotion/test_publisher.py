@@ -20,11 +20,11 @@ import os
 import boto3
 from mock import Mock, patch, PropertyMock
 from moto import mock_ssm
-from nose.tools import assert_equal
+from nose.tools import assert_equal, assert_raises
 
 from stream_alert.rule_promotion.publisher import StatsPublisher
 from stream_alert.rule_promotion.statistic import StagingStatistic
-from stream_alert.shared import config
+from stream_alert.shared import athena, config
 
 
 class TestStatsPublisher(object):
@@ -160,11 +160,8 @@ class TestStatsPublisher(object):
         """StatsPublisher - Query Alerts, Bad Response"""
         stat = list(self._get_fake_stats(count=1))[0]
         with patch.object(self.publisher, '_athena_client', new_callable=PropertyMock) as mock:
-            mock.run_async_query.return_value = None
-            assert_equal(self.publisher._query_alerts(stat), None)
-            mock.run_async_query.assert_called_once()
-            log_mock.assert_called_with(
-                'Failed to query alert info for rule: \'%s\'', 'test_rule_0')
+            mock.run_async_query.side_effect = athena.AthenaQueryExecutionError()
+            assert_raises(athena.AthenaQueryExecutionError, self.publisher._query_alerts, stat)
 
     def test_query_alerts(self):
         """StatsPublisher - Query Alerts"""

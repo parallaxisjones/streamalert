@@ -111,9 +111,6 @@ class StatsPublisher(object):
         LOGGER.debug('Querying alert info for rule \'%s\': %s', stat.rule_name, info_statement)
 
         response = self._athena_client.run_async_query(info_statement)
-        if not response:
-            LOGGER.error('Failed to query alert info for rule: \'%s\'', stat.rule_name)
-            return
 
         return response['QueryExecutionId']
 
